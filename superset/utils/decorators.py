@@ -234,13 +234,13 @@ def show_telemetry(f: Callable[..., Any]) -> Callable[..., Any]:
         result = f(*args, **kwargs)
         if hasattr(result, "get_json"):
             try:
-                json_data = result.get_json()
+                payload = result.get_json()
             except Exception:  # pylint: disable=broad-exception-caught
                 return result
 
-            if isinstance(json_data, dict):
-                json_data["telemetry"] = telemetry.events[:]
-                return jsonify(json_data)
+            if isinstance(payload, dict):
+                payload["telemetry"], telemetry.events[:] = telemetry.events[:], []
+                return jsonify(payload), result.status_code
 
         return result
 
