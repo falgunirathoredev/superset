@@ -59,15 +59,15 @@ class TelemetryHandler:  # pylint: disable=too-few-public-methods
                 {
                     "name": "Computation",
                     "start": 1710360466.328792,
-                    "end": 1710360472.7976031,
                     "children": [
                         {
                             "name": "Crunching numbers",
                             "start": 1710360468.401769,
-                            "end": 1710360470.532115,
                             "children": [],
+                            "end": 1710360470.532115,
                         },
                     ],
+                    "end": 1710360472.7976031,
                 },
             },
         }
@@ -87,8 +87,7 @@ class TelemetryHandler:  # pylint: disable=too-few-public-methods
             "children": [],
         }
         self.root.append(event)
-        previous = self.root
-        self.root = event["children"]
+        previous, self.root = self.root, event["children"]
         try:
             yield
         finally:
