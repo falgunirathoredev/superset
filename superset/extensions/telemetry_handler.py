@@ -36,16 +36,18 @@ class TelemetryHandler:  # pylint: disable=too-few-public-methods
 
     To use this, decorate an endpoint with `@show_telemetry`:
 
+        from superset.extensions import telemetry
+
         @expose("/")
         @show_telemetry
         def some_endpoint() -> str:
-            with g.telemetry("Computation"):
+            with telemetry.add("Computation"):
                 output = {"answer": some_computation()}
 
             return jsonify(output)
 
         def some_computation() -> int:
-            with g.telemetry("Crunching numbers"):
+            with telemetry.add("Crunching numbers"):
                 return magic()
 
     The response payload will then look like this:
@@ -79,7 +81,7 @@ class TelemetryHandler:  # pylint: disable=too-few-public-methods
         self.root = self.events
 
     @contextmanager
-    def __call__(self, name: str) -> Iterator[None]:
+    def add(self, name: str) -> Iterator[None]:
         event: TelemetryItem = {
             "name": name,
             "start": time.time(),

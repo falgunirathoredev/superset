@@ -65,7 +65,6 @@ from superset.exceptions import (
 )
 from superset.explore.permalink.exceptions import ExplorePermalinkGetFailedError
 from superset.extensions import async_query_manager, cache_manager
-from superset.extensions.telemetry import TelemetryHandler
 from superset.models.core import Database
 from superset.models.dashboard import Dashboard
 from superset.models.slice import Slice
@@ -927,8 +926,3 @@ class Superset(BaseSupersetView):
     @deprecated(new_target="/sqllab/history")
     def sqllab_history(self) -> FlaskResponse:
         return redirect("/sqllab/history")
-
-
-@app.before_request
-def start_telemetry() -> None:
-    g.telemetry = TelemetryHandler()

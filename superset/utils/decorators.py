@@ -26,6 +26,7 @@ from uuid import UUID
 
 from flask import current_app, g, jsonify, Response
 
+from superset.extensions import telemetry
 from superset.utils import core as utils
 from superset.utils.dates import now_as_float
 
@@ -220,7 +221,9 @@ def show_telemetry(f: Callable[..., Any]) -> Callable[..., Any]:
     This allows us to instrument the stack, but adding timestamps at different levels,
     eg:
 
-        with g.telemetry("Run query"):
+        from superset.extensions import telemetry
+
+        with telemetry.add("Run query"):
             data = run_query(sql)
 
     And then we can display this information in the UI.
@@ -235,8 +238,8 @@ def show_telemetry(f: Callable[..., Any]) -> Callable[..., Any]:
             except Exception:  # pylint: disable=broad-exception-caught
                 return result
 
-            if isinstance(json_data, dict) and hasattr(g, "telemetry"):
-                json_data["telemetry"] = g.telemetry.events
+            if isinstance(json_data, dict):
+                json_data["telemetry"] = telemetry.events[:]
                 return jsonify(json_data)
 
         return result

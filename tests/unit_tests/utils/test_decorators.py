@@ -302,8 +302,8 @@ def test_show_telemetry(mocker: MockerFixture) -> None:
     """
     Test the `show_telemetry` decorator.
     """
-    g = mocker.patch("superset.utils.decorators.g")  # pylint: disable=invalid-name
-    g.telemetry.events = [{"name": "test", "start": 1, "end": 2, "children": []}]
+    telemetry = mocker.patch("superset.utils.decorators.telemetry")
+    telemetry.events = [{"name": "test", "start": 1, "end": 2, "children": []}]
 
     @decorators.show_telemetry
     def exposed() -> Response:
